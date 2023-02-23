@@ -8,11 +8,11 @@ std::map<std::string, size_t> operators = {{"puts", 0}, {"[", 0}, {"]", 0}, {"."
                                            {"\"", 0}, {"+", 0}, {"-", 0}, {"*", 0}, {"=", 0}, {"/", 0}, {",", 0}, 
                                            {"(", 0}, {")", 0}, {"for", 0}, {"loop", 0}, {"while", 0}, {"do", 0}, 
                                            {"else", 0}, {"elsif", 0}, {"==", 0}, {">", 0}, {"<", 0}, {">=", 0}, {"<=", 0}, {"end", 0}, 
-                                           {"begin", 0},{"case", 0}, {"when", 0}, {"gets", 0}, {"!", 0}, {"swapped", 0}, 
-                                           {"break", 0}, {"def", 0}, {"if", 0}, {"..", 0}, {"break", 0}, {"gets", 0}};
+                                           {"begin", 0},{"case", 0}, {"when", 0}, {"gets", 0}, {"!", 0}, {"break", 0}, 
+                                           {"def", 0}, {"if", 0}, {"..", 0}, {"break", 0}, {"gets", 0}};
 std::map<std::string, size_t> operands;
 
-const std::string ignore = "do \n else elsif when in";
+const std::string ignore = "do \n else elsif when in ) ]";
 
 
 void GetInfo(std::string code)
@@ -23,7 +23,7 @@ void GetInfo(std::string code)
     bool dot = false;
     for(auto symbol : code) 
     {
-        //std::cout << currToken << " " << prevToken << "\n"; 
+        std::cout << currToken << " " << prevToken << "\n"; 
         prevToken = currToken;
         currToken.push_back(symbol);
 
@@ -41,7 +41,11 @@ void GetInfo(std::string code)
         else if (operators.find(std::string(1, symbol)) != mapEnd)
         {
             if(dot || symbol == '(')
+            {
+                if(symbol == '(')
+                    --operators["("];
                 operators[prevToken]++;
+            }
             else
                 operands[prevToken]++;
             currToken = symbol;
@@ -61,6 +65,7 @@ void GetInfo(std::string code)
 
     std::cout << "Operators:\n";
     auto end = operators.end();
+    size_t allOperators = 0;
     for(auto beg = operators.begin(); beg != end;)
     {
         if((beg->second == 0) || (beg->first != "if" && ignore.find(beg->first) != std::string::npos))
@@ -69,17 +74,22 @@ void GetInfo(std::string code)
             continue;
         }
         std::cout << beg->first << ": " << beg->second << '\n';
+        allOperators += beg->second;
         beg++;
     }
-    std::cout << std::endl;
+    std::cout << allOperators << std::endl << std::endl;
 
     operands.erase("in");
     std::cout << "Operands:\n";
+    size_t allOperands = 0;
     for(auto elem : operands)
     {
         std::cout << elem.first << ": " << elem.second << '\n';
+        allOperands += elem.second;
     }
+    std::cout << allOperands << std::endl << std::endl;
 
+    
 
 
     return;
