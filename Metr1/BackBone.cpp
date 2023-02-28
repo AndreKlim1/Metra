@@ -10,10 +10,10 @@ std::map<std::string, size_t> operators = {{"puts", 0}, {"[", 0}, {"]", 0}, {"."
                                            {"(", 0}, {")", 0}, {"for", 0}, {"loop", 0}, {"while", 0}, {"do", 0}, 
                                            {"else", 0}, {"elsif", 0}, {"==", 0}, {">", 0}, {"<", 0}, {">=", 0}, {"<=", 0}, {"end", 0}, 
                                            {"begin", 0},{"case", 0}, {"when", 0}, {"gets", 0}, {"!", 0}, {"break", 0}, 
-                                           {"def", 0}, {"if", 0}, {"..", 0}, {"break", 0}, {"gets", 0}};
+                                           {"def", 0}, {"if", 0}, {"..", 0}, {"break", 0}, {"\r", 0}};
 std::map<std::string, size_t> operands;
 
-const std::string ignore = "do \n else elsif when in () ]";
+const std::string ignore = "do \n \r else elsif when in () ]";
 
 
 void GetInfo(std::string code)
